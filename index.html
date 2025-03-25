@@ -59,7 +59,7 @@ div.controls-container { clear: both; margin-top: 20px; }
     </div>
 
     <p id="op_load">
-      Load <input type="text" id="file" value="/tests/tetris.gb">
+      Load ROM: <input type="file" id="file" accept=".gb,.gbc">
       Break at <input type="text" id="breakpoint">
     </p>
 
@@ -174,8 +174,21 @@ jsGB = {
   reset: function() {
     LOG.reset(); GPU.reset(); MMU.reset(); Z80.reset(); KEY.reset(); TIMER.reset();
     Z80._r.pc=0x100;MMU._inbios=0;Z80._r.sp=0xFFFE;Z80._r.hl=0x014D;Z80._r.c=0x13;Z80._r.e=0xD8;Z80._r.a=1;
-    MMU.load(document.getElementById('file').value);
-  
+    
+    // Update file input handler
+    document.getElementById('file').onchange = async function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        try {
+            const reader = new BinFileReader();
+            await reader.loadFile(file);
+            MMU.loadROM(reader);
+        } catch (err) {
+            LOG.out('ERROR', 'Failed to load ROM: ' + err.message);
+        }
+    };
+
     document.getElementById('op_reset').onclick=jsGB.reset;
     document.getElementById('op_run').onclick=jsGB.run;
     document.getElementById('op_run').innerHTML='Run';
