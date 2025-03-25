@@ -1,49 +1,38 @@
-tabMagic = {
+const tabMagic = {
   _map: {},
 
-  init: function()
-  {
-    l = document.getElementsByTagName('ul');
-    for(i=0; i<l.length; i++)
-    {
-      if(l[i].className.indexOf('tablist') >= 0)
-      {
-	t = l[i].getElementsByTagName('li');
-	for(j=0; j<t.length; j++)
-	{
-	  tabMagic._map[t[j].getAttribute('rel')] = l[i].id;
-	  t[j].onclick = function()
-	  {
-	    tabMagic.sw(this.getAttribute('rel'));
-	    return false;
-	  };
-	}
-	tabMagic.sw(t[0].getAttribute('rel'));
+  init() {
+    const lists = document.getElementsByTagName('ul');
+    for(let i=0; i<lists.length; i++) {
+      if(lists[i].className.indexOf('tablist') >= 0) {
+        const tabs = lists[i].getElementsByTagName('li');
+        for(let j=0; j<tabs.length; j++) {
+          tabMagic._map[tabs[j].getAttribute('rel')] = lists[i].id;
+          tabs[j].onclick = () => {
+            tabMagic.sw(tabs[j].getAttribute('rel'));
+            return false;
+          };
+        }
+        tabMagic.sw(tabs[0].getAttribute('rel'));
       }
     }
   },
 
-  sw: function(tr)
-  {
-    tl = document.getElementsByTagName('ul');
-    for(li=0; li<tl.length; li++)
-    {
-      if(tl[li].className.indexOf('tablist') >= 0 && tl[li].id == tabMagic._map[tr])
-      {
-        items = tl[li].getElementsByTagName('li');
-	for(lj=0; lj<items.length; lj++)
-	{
-	  if(items[lj].getAttribute('rel') == tr)
-	  {
-	    items[lj].className = 'tab_hi';
-	    document.getElementById(items[lj].getAttribute('rel')).style.display = 'block';
-	  }
-	  else
-	  {
-	    items[lj].className = 'tab';
-	    document.getElementById(items[lj].getAttribute('rel')).style.display = 'none';
-	  }
-	}
+  sw(tr) {
+    const tabLists = document.getElementsByTagName('ul');
+    for(let li=0; li<tabLists.length; li++) {
+      if(tabLists[li].className.indexOf('tablist') >= 0 && 
+         tabLists[li].id == tabMagic._map[tr]) {
+        const items = tabLists[li].getElementsByTagName('li');
+        for(let lj=0; lj<items.length; lj++) {
+          if(items[lj].getAttribute('rel') == tr) {
+            items[lj].className = 'tab_hi';
+            document.getElementById(items[lj].getAttribute('rel')).style.display = 'block';
+          } else {
+            items[lj].className = 'tab';
+            document.getElementById(items[lj].getAttribute('rel')).style.display = 'none';
+          }
+        }
       }
     }
   }
