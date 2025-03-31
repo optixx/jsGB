@@ -1,124 +1,154 @@
-<html>
- <head>
-  <style type="text/css">
-* { margin:0; padding: 0; }
-body { padding: 20px; background-color: black; color: white; font-family:Arial, Helvetica, sans-serif; font-size:0.82em; }
-#out { border: 1px solid white; margin:0 auto 20px auto; transform-origin: top left; display: inline-block; }
-#msg { margin: 5px; font-family: sans-serif; font-size: 0.82em; }
-div.tab { height:124px; width:320px; border:1px solid white; margin:0; overflow:auto; clear: both; }
-ul.ops { float:left; list-style:none inside; }
-ul.ops li { cursor:pointer; }
-table#reg { font-size:11px; font-family:Lucida Console, Bitstream Vera Sans Mono, monospace; line-height:1em; }
-table#reg td.regname { text-align:right; padding-left:1em; }
-ul.tablist { list-style: none inside; position:relative; bottom:-1px; width: 100%; float: none; clear: both; overflow: hidden; }
-ul.tablist li { display: block; float: left; background: #444; border-top: 1px solid #444; border-bottom: 1px solid white; padding: 3px 0.5em; margin-right: 2px; cursor: pointer; font-size:9px; }
-ul.tablist li.tab_hi { border-left: 1px solid white; border-right: 1px solid white; border-top: 1px solid white; border-bottom: 1px solid black; background: black; }
-p#op_load { margin: 10px 0; }
-input { background:black; color:white; border:1px solid white; width:5em; }
-input#file { width:10em; }
-div#tilectrl { float:left; margin:1em;}
-div#tilepixels { width:96px; height:96px; border:1px solid white; float:left; margin:1em; }
-div#tilepixels div { width:12px; height:12px; float:left; }
-div.subcanv { margin: 10px 0; }
-p.fps { float:right; text-align:right; }
-div.controls-container { clear: both; margin-top: 20px; }
-  </style>
- </head>
- <body>
-  <div id="out">
-   <canvas id="screen" width="160" height="144">
-   </canvas>
-  </div>
-  
-  <div class="controls-container">
-    <div class="subcanv">
-      <ul class="ops">
-        <li id="op_reset">Reset</li>
-        <li id="op_run">Run</li>
-        <li id="op_step">Step</li>
-      </ul>
-      <p>
-        Scale: 
-        <select id="display-scale">
-          <option value="1">1x</option>
-          <option value="2">2x</option>
-          <option value="3">3x</option>
-          <option value="4">4x</option>
-        </select>
-      </p>
-      <p class="fps"><span id="fps">0</span> fps</p>
-    </div>
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jsGB Emulator</title>
+  <!-- Bootstrap CSS will be imported via JS -->
+</head>
+<body>
 
-    <p id="op_load">
-      Load ROM: <input type="file" id="file" values="tests/tetris.gb" accept=".gb,.gbc">
-      Break at <input type="text" id="breakpoint">
-    </p>
-
-    <div class="debug-container">
-      <ul class="tablist" id="tablist_debug">
-        <li rel="tab_message">Messages</li>
-        <li rel="tab_registers">Debugger</li>
-        <li rel="tab_tile">Tile View</li>
-      </ul>
-
-      <div class="tab" id="tab_message"><div id="msg"></div></div>
-      <div class="tab" id="tab_registers">
-        <table id="reg">
-          <tr>
-            <td class="regname">A</td><td class="reg" rel="a"></td>
-            <td class="regname">LCDC</td><td class="io" rel="40"></td>
-            <td class="regname">JOYP</td><td class="io" rel="00"></td>
-          </tr>
-          <tr>
-            <td class="regname">B</td><td class="reg" rel="b"></td>
-            <td class="regname">STAT</td><td class="io" rel="41"></td>
-          </tr>
-          <tr>
-            <td class="regname">C</td><td class="reg" rel="c"></td>
-            <td class="regname">SCY</td><td class="io" rel="42"></td>
-            <td class="regname">DIV</td><td class="io" rel="04"></td>
-          </tr>
-          <tr>
-            <td class="regname">D</td><td class="reg" rel="d"></td>
-      
-            <td class="regname">SCX</td><td class="io" rel="43"></td>
-            <td class="regname">TIMA</td><td class="io" rel="05"></td>
-          </tr>
-          <tr>
-            <td class="regname">E</td><td class="reg" rel="e"></td>
-            <td class="regname">LY</td><td class="io" rel="44"></td>
-            <td class="regname">TMA</td><td class="io" rel="06"></td>
-          </tr>
-          <tr>
-            <td class="regname">HL</td><td class="reg" rel="hl"></td>
-            <td class="regname">LYC</td><td class="io" rel="45"></td>
-            <td class="regname">TCA</td><td class="io" rel="07"></td>
-          </tr>
-          <tr>
-            <td class="regname">PC</td><td class="reg" rel="pc"></td>
-            <td class="regname">IE</td><td class="io" rel="ff"></td>
-          </tr>
-          <tr>
-            <td class="regname">SP</td><td class="reg" rel="sp"></td>
-            <td class="regname">IF</td><td class="io" rel="0f"></td>
-          </tr>
-          <tr>
-            <td class="regname">F</td><td class="reg" rel="f"></td>
-          </tr>
-        </table>
-      </div>
-      <div class="tab" id="tab_tile">
-        <div id="tilectrl">
-          <input type="text" id="tilenum" value="0"><br>
-          <ul class="ops">
-            <li id="tileprev">Prev</li>
-            <li id="tilenext">Next</li>
-          </ul>
+  <div class="container mt-3">
+    <!-- Canvas Row -->
+    <div class="row justify-content-center mb-3">
+      <div class="col-auto">
+        <div id="out" class="border border-secondary d-inline-block" style="transform-origin: top left;"> <!-- Keep transform-origin -->
+          <canvas id="screen" width="160" height="144"></canvas>
         </div>
-        <div id="tilepixels"></div>
       </div>
     </div>
-  </div>
+
+    <!-- Controls and Debugger Row -->
+    <div class="row">
+      <div class="col">
+
+        <!-- Top Controls Sub-Row -->
+        <div class="row mb-3 align-items-center">
+          <div class="col-auto">
+            <div class="btn-group" role="group" aria-label="Emulator Controls">
+              <button type="button" class="btn btn-secondary" id="op_reset">Reset</button>
+              <button type="button" class="btn btn-primary" id="op_run">Run</button> <!-- Will toggle to Pause -->
+              <button type="button" class="btn btn-secondary" id="op_step">Step</button>
+            </div>
+          </div>
+          <div class="col-auto">
+            <label for="display-scale" class="form-label me-1">Scale:</label>
+            <select class="form-select form-select-sm d-inline-block w-auto" id="display-scale">
+              <option value="1">1x</option>
+              <option value="2" selected>2x</option> <!-- Default to 2x -->
+              <option value="3">3x</option>
+              <option value="4">4x</option>
+            </select>
+          </div>
+          <div class="col text-end">
+            <span id="fps" class="badge bg-light text-dark">0</span> fps
+          </div>
+        </div>
+
+        <!-- Load ROM / Breakpoint Sub-Row -->
+        <div class="row mb-3 gy-2 align-items-center">
+          <div class="col-md-6">
+            <label for="file" class="form-label">Load ROM:</label>
+            <input type="file" class="form-control form-control-sm" id="file" accept=".gb,.gbc">
+          </div>
+          <div class="col-md-6">
+            <label for="breakpoint" class="form-label">Break at:</label>
+            <input type="text" class="form-control form-control-sm" id="breakpoint" placeholder="e.g., 0x100">
+          </div>
+        </div>
+
+        <!-- Debugger Tabs -->
+        <div class="debug-container">
+          <ul class="nav nav-tabs" id="debugTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="messages-tab" data-bs-toggle="tab" data-bs-target="#tab_message" type="button" role="tab" aria-controls="tab_message" aria-selected="true">Messages</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="registers-tab" data-bs-toggle="tab" data-bs-target="#tab_registers" type="button" role="tab" aria-controls="tab_registers" aria-selected="false">Debugger</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="tile-tab" data-bs-toggle="tab" data-bs-target="#tab_tile" type="button" role="tab" aria-controls="tab_tile" aria-selected="false">Tile View</button>
+            </li>
+          </ul>
+          <div class="tab-content border border-top-0 p-2" id="debugTabContent" style="min-height: 150px; font-size: 0.8em;">
+            <!-- Messages Tab Pane -->
+            <div class="tab-pane fade show active" id="tab_message" role="tabpanel" aria-labelledby="messages-tab" tabindex="0">
+              <div id="msg" style="height: 124px; overflow-y: scroll; font-family: monospace;"></div>
+            </div>
+            <!-- Debugger Tab Pane -->
+            <div class="tab-pane fade" id="tab_registers" role="tabpanel" aria-labelledby="registers-tab" tabindex="0">
+              <table id="reg" class="table table-sm table-borderless" style="font-family:Lucida Console, Bitstream Vera Sans Mono, monospace; font-size: 11px;">
+                <tbody>
+                  <tr>
+                    <td class="text-end fw-bold">A:</td><td class="reg font-monospace" rel="a">00</td>
+                    <td class="text-end fw-bold ps-3">LCDC:</td><td class="io font-monospace" rel="40">00</td>
+                    <td class="text-end fw-bold ps-3">JOYP:</td><td class="io font-monospace" rel="00">00</td>
+                  </tr>
+                  <tr>
+                    <td class="text-end fw-bold">B:</td><td class="reg font-monospace" rel="b">00</td>
+                    <td class="text-end fw-bold ps-3">STAT:</td><td class="io font-monospace" rel="41">00</td>
+                    <td></td><td></td>
+                  </tr>
+                  <tr>
+                    <td class="text-end fw-bold">C:</td><td class="reg font-monospace" rel="c">00</td>
+                    <td class="text-end fw-bold ps-3">SCY:</td><td class="io font-monospace" rel="42">00</td>
+                    <td class="text-end fw-bold ps-3">DIV:</td><td class="io font-monospace" rel="04">00</td>
+                  </tr>
+                  <tr>
+                    <td class="text-end fw-bold">D:</td><td class="reg font-monospace" rel="d">00</td>
+                    <td class="text-end fw-bold ps-3">SCX:</td><td class="io font-monospace" rel="43">00</td>
+                    <td class="text-end fw-bold ps-3">TIMA:</td><td class="io font-monospace" rel="05">00</td>
+                  </tr>
+                  <tr>
+                    <td class="text-end fw-bold">E:</td><td class="reg font-monospace" rel="e">00</td>
+                    <td class="text-end fw-bold ps-3">LY:</td><td class="io font-monospace" rel="44">00</td>
+                    <td class="text-end fw-bold ps-3">TMA:</td><td class="io font-monospace" rel="06">00</td>
+                  </tr>
+                  <tr>
+                    <td class="text-end fw-bold">HL:</td><td class="reg font-monospace" rel="hl">0000</td>
+                    <td class="text-end fw-bold ps-3">LYC:</td><td class="io font-monospace" rel="45">00</td>
+                    <td class="text-end fw-bold ps-3">TAC:</td><td class="io font-monospace" rel="07">00</td> <!-- Changed from TCA -->
+                  </tr>
+                  <tr>
+                    <td class="text-end fw-bold">PC:</td><td class="reg font-monospace" rel="pc">0000</td>
+                    <td class="text-end fw-bold ps-3">IE:</td><td class="io font-monospace" rel="ff">00</td>
+                     <td></td><td></td>
+                 </tr>
+                  <tr>
+                    <td class="text-end fw-bold">SP:</td><td class="reg font-monospace" rel="sp">0000</td>
+                    <td class="text-end fw-bold ps-3">IF:</td><td class="io font-monospace" rel="0f">00</td>
+                     <td></td><td></td>
+                 </tr>
+                  <tr>
+                    <td class="text-end fw-bold">F:</td><td class="reg font-monospace" rel="f">----</td> <!-- Use ZNHC format? -->
+                    <td></td><td></td>
+                    <td></td><td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Tile View Tab Pane -->
+            <div class="tab-pane fade" id="tab_tile" role="tabpanel" aria-labelledby="tile-tab" tabindex="0">
+              <div class="row">
+                <div class="col-auto">
+                    <label for="tilenum" class="form-label">Tile #:</label>
+                    <input type="number" class="form-control form-control-sm mb-2" id="tilenum" value="0" min="0" max="511" style="width: 70px;">
+                    <div class="btn-group btn-group-sm" role="group">
+                      <button type="button" class="btn btn-secondary" id="tileprev">Prev</button>
+                      <button type="button" class="btn btn-secondary" id="tilenext">Next</button>
+                    </div>
+                </div>
+                <div class="col-auto">
+                  <div id="tilepixels" class="border border-secondary" style="width:96px; height:96px; display: grid; grid-template-columns: repeat(8, 12px); grid-template-rows: repeat(8, 12px);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div> <!-- End Controls and Debugger Column -->
+    </div> <!-- End Controls and Debugger Row -->
+  </div> <!-- End Container -->
 
   <script type="module" src="js/main.js"></script>
  </body>

@@ -1,10 +1,13 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap'; // Imports Bootstrap's JavaScript
+
 import { LOG } from './log.js';
 import { GPUInstance } from './gpu.js';
 import { MMUInstance } from './mmu.js';
 import { KEY } from './key.js';
 import { TIMER } from './timer.js';
 import { Z80 } from './z80.js';
-import { tabMagic } from './tabs.js';
+// import { tabMagic } from './tabs.js'; // Removed - Bootstrap handles tabs
 
 /**
  * BinFileReader.js
@@ -132,7 +135,6 @@ const jsGB = {
     jsGB.dbgupdate();
     jsGB.dbgtile();
     jsGB.trace = '';
-    tabMagic.init();
     jsGB.pause();
     
     LOG.out('MAIN', 'Reset.');
@@ -289,8 +291,19 @@ function initializeTilePixels() {
 function handleDisplayScale() {
     const scale = parseInt(this.value);
     const container = document.getElementById('out');
-    container.style.transform = `scale(${scale})`;
-    container.style.marginBottom = `${(scale - 1) * 144}px`;
+    const canvas = document.getElementById('screen');
+
+    const newWidth = 160 * scale;
+    const newHeight = 144 * scale;
+
+    // Set the container's size to occupy the scaled space
+    container.style.width = `${newWidth}px`;
+    container.style.height = `${newHeight}px`;
+
+    // Scale the canvas itself visually within the container
+    // We still need transform-origin on the canvas if we scale it directly
+    canvas.style.transformOrigin = 'top left'; 
+    canvas.style.transform = `scale(${scale})`; 
 }
 
 function handleTilePrev() {
