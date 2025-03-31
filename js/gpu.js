@@ -1,3 +1,7 @@
+import { LOG } from './log.js';
+import { Z80 } from './z80.js'; // Assuming Z80 is exported from z80.js
+import { MMUInstance } from './mmu.js'; // Assuming MMUInstance is exported from mmu.js
+
 class GPU {
   constructor() {
     // Initialize all properties in constructor
@@ -390,6 +394,6 @@ class GPU {
   }
 }
 
-// Export GPU class and instance
-window.GPU = GPU;
-window.GPUInstance = new GPU();
+// Create and export the GPU instance
+const GPUInstance = new GPU();
+export { GPUInstance };

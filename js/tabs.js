@@ -1,4 +1,4 @@
-const tabMagic = {
+export const tabMagic = {
   _map: {},
 
   init() {

@@ -1,3 +1,9 @@
+import { LOG } from './log.js';
+import { Z80 } from './z80.js'; // Assuming Z80 is exported from z80.js
+import { GPUInstance } from './gpu.js';
+import { KEY } from './key.js'; // Assuming KEY is exported from key.js
+import { TIMER } from './timer.js'; // Assuming TIMER is exported from timer.js
+
 class MMU {
   constructor() {
     this._bios = [
@@ -259,5 +265,6 @@ class MMU {
   }
 }
 
-// Create singleton instance
+// Create and export singleton instance
 const MMUInstance = new MMU();
+export { MMUInstance };

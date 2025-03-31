@@ -1,3 +1,7 @@
+import { LOG } from './log.js';
+import { MMUInstance } from './mmu.js';
+import { Z80 } from './z80.js';
+
 class Timer {
   _div = 0;
   _tma = 0;
@@ -22,7 +26,7 @@ class Timer {
     this._clock.main = 0;
     if(this._tima > 255) {
       this._tima = this._tma;
-      MMU._if |= 4;
+      MMUInstance._if |= 4;
     }
   }
 
@@ -79,4 +83,4 @@ class Timer {
   }
 }
 
-const TIMER = new Timer();
+export const TIMER = new Timer();

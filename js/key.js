@@ -1,4 +1,6 @@
-const KEY = {
+import { LOG } from './log.js';
+
+export const KEY = {
   _keys: [0x0F, 0x0F],
   _colidx: 0,
 

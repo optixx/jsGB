@@ -1,4 +1,4 @@
-const LOG = {
+export const LOG = {
   _start: 0,
 
   reset() {

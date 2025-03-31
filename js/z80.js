@@ -1,3 +1,6 @@
+import { LOG } from './log.js';
+import { MMUInstance } from './mmu.js';
+
 /**
  * jsGB: Z80 core
  * Imran Nazar, May 2009
@@ -5,7 +8,7 @@
  * Bugs: If PC wraps at the top of memory, this will not be caught until the end of an instruction
  */
 
-Z80 = {
+export const Z80 = {
   _r: {
     a:0, b:0, c:0, d:0, e:0, h:0, l:0, f:0,
     sp:0, pc:0, i:0, r:0,

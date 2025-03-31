@@ -1,3 +1,11 @@
+import { LOG } from './log.js';
+import { GPUInstance } from './gpu.js';
+import { MMUInstance } from './mmu.js';
+import { KEY } from './key.js';
+import { TIMER } from './timer.js';
+import { Z80 } from './z80.js';
+import { tabMagic } from './tabs.js';
+
 /**
  * BinFileReader.js
  * You can find more about this function at
