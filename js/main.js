@@ -275,8 +275,29 @@ const jsGB = {
 
     // Initialize tile pixels
     initializeTilePixels();
+
+    // Auto-load test ROM
+    loadTestRom(); 
   }
 };
+
+// Function to fetch and load the test ROM
+async function loadTestRom() {
+  const romPath = '/tetris.gb'; // Path relative to public directory
+  try {
+    LOG.out('MAIN', `Attempting to auto-load ROM: ${romPath}`);
+    const response = await fetch(romPath);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const arrayBuffer = await response.arrayBuffer();
+    const romData = new Uint8Array(arrayBuffer);
+    MMUInstance.loadROM(romData);
+    LOG.out('MAIN', 'Auto-loaded ROM successfully.');
+  } catch (err) {
+    LOG.out('ERROR', `Failed to auto-load ROM ${romPath}: ${err.message}`);
+  }
+}
 
 // DOM event handlers
 function initializeTilePixels() {

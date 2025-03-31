@@ -67,10 +67,26 @@ class MMU {
     LOG.out('MMU', `ROM loaded, ${this._rom.length} bytes.`);
   }
 
-  loadROM(reader) {
-    const romSize = reader.getFileSize();
+  loadROM(romData) {
+    let dataArray;
+    let romSize;
+
+    if (romData instanceof Uint8Array) {
+      // Handle raw Uint8Array (from fetch)
+      dataArray = romData;
+      romSize = dataArray.length;
+    } else if (romData instanceof BinFileReader) {
+      // Handle BinFileReader (from file input)
+      dataArray = romData.fileContents;
+      romSize = romData.getFileSize();
+    } else {
+      LOG.out('ERROR', 'Invalid ROM data format provided to loadROM');
+      return; // Or throw an error
+    }
+
+    // Copy data into the internal ROM array
     for(let i = 0; i < romSize && i < 32768; i++) {
-      this._rom[i] = reader.readByteAt(i);
+      this._rom[i] = dataArray[i];
     }
     this._carttype = this._rom[0x0147];
     LOG.out('MMU', `ROM loaded, ${romSize} bytes.`);
